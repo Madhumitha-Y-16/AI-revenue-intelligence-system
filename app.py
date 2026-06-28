@@ -30,33 +30,44 @@ llm = ChatGroq(
 )
 
 def ask_question(question):
-    # generate sql
-    prompt = f"""
-    You are a SQL expert. Write a PostgreSQL query for this question:
-    {question}
-    
-    Table: sales_data
-    Columns: order_id, order_date, category, region, segment, 
-    sales_amount, profit, discount, profit_margin, order_year, 
-    order_month, sales_rep_id, customer_id, product_name
-    
-    Return ONLY the SQL query, nothing else.
-    """
-    sql = llm.invoke(prompt).content.strip()
-    sql = sql.replace("```sql","").replace("```","").strip()
-    
-    # run sql
-    with engine.connect() as conn:
-        result = pd.read_sql(text(sql), conn)
-    
-    # explain result
-    explain = f"""
-    Question: {question}
-    Data: {result.to_string()}
-    Give a clear 2-3 line business answer a non-technical manager can understand.
-    """
-    answer = llm.invoke(explain).content
-    return sql, result, answer
+    try:
+        # generate sql
+        prompt = f"""
+        You are a SQL expert. Write a PostgreSQL SELECT query for this question:
+        {question}
+        
+        Table: sales_data
+        Columns: order_id, order_date, category, region, segment, 
+        sales_amount, profit, discount, profit_margin, order_year, 
+        order_month, sales_rep_id, customer_id, product_name
+        
+        IMPORTANT:
+        - Return ONLY a SELECT query, nothing else
+        - Do not use DROP, DELETE, UPDATE or INSERT
+        - Query must be valid PostgreSQL
+        """
+        sql = llm.invoke(prompt).content.strip()
+        sql = sql.replace("```sql","").replace("```","").strip()
+
+        # safety check — only allow SELECT queries
+        if not sql.upper().startswith("SELECT"):
+            return None, None, "I can only answer questions that require reading data. Please rephrase your question."
+
+        # run sql
+        with engine.connect() as conn:
+            result = pd.read_sql(text(sql), conn)
+
+        # explain result
+        explain = f"""
+        Question: {question}
+        Data: {result.to_string()}
+        Give a clear 2-3 line business answer a non-technical manager can understand.
+        """
+        answer = llm.invoke(explain).content
+        return sql, result, answer
+
+    except Exception as e:
+        return None, None, f"Could not process this question. Please try rephrasing it. Error: {str(e)}"
 
 # chat history
 if 'history' not in st.session_state:
@@ -80,9 +91,9 @@ question = st.text_input("Type your question here:", placeholder="e.g. Which pro
 if st.button("Ask", type="primary"):
     if question:
         with st.spinner("Thinking..."):
-            try:
-                sql, result, answer = ask_question(question)
+            sql, result, answer = ask_question(question)
 
+            if answer:
                 st.success("Answer")
                 st.write(answer)
 
@@ -92,14 +103,13 @@ if st.button("Ask", type="primary"):
                     'answer': answer
                 })
 
-                with st.expander("See the SQL query generated"):
-                    st.code(sql, language="sql")
+                if sql:
+                    with st.expander("See the SQL query generated"):
+                        st.code(sql, language="sql")
 
-                with st.expander("See the raw data"):
-                    st.dataframe(result)
-
-            except Exception as e:
-                st.error(f"Something went wrong: {e}")
+                if result is not None:
+                    with st.expander("See the raw data"):
+                        st.dataframe(result)
     else:
         st.warning("Please type a question first.")
 
