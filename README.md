@@ -19,6 +19,62 @@ The fictional company is **SalesForce Pro Inc.** which is selling Electronics, F
 
 Python · PostgreSQL · SQL · LangChain · Groq LLM · Power BI · Streamlit · Scikit-learn · Pandas · Matplotlib
 
+## ML Models
+
+### Churn Prediction — Random Forest Classifier
+
+I built this model to identify customers who haven't ordered in the last 180 days and are at risk of leaving permanently.
+
+| Metric | Value |
+|---|---|
+| Algorithm | Random Forest Classifier |
+| Training rows | 6,387 |
+| Test rows | 1,597 |
+| Accuracy | 74% |
+
+One thing I ran into during building this, I initially got 100% accuracy which looked great but turned out to be data leakage. The column `days_since_last_order` was directly defining churn, so the model was essentially using the answer to predict the answer. I removed it and retrained, which brought accuracy down to a realistic 74%.
+
+**Top Features driving churn prediction:**
+
+| Feature | Importance |
+|---|---|
+| Total Profit | 20% |
+| Revenue per Order | 19% |
+| Total Revenue | 19% |
+| Avg Discount | 15% |
+| Avg Rating | 12% |
+| Total Orders | 10% |
+| Return Rate | 3% |
+| Total Returns | 2% |
+
+**Key Finding:** Spending behaviour is the strongest predictor of churn customers who spend less per order and generate lower profit are more likely to leave.
+
+---
+
+### Revenue Forecasting — Linear Regression
+
+I used 48 months of historical revenue data (Jan 2021 - Dec 2024) to forecast the next 6 months.
+
+| Metric | Value |
+|---|---|
+| Algorithm | Linear Regression |
+| Training data | 48 months |
+| Forecast period | Jan–Jun 2025 |
+| Monthly growth rate | ₹78.9 Lakhs per month |
+
+**6 Month Forecast:**
+
+| Month | Predicted Revenue |
+|---|---|
+| January 2025 | ₹45.92 Cr |
+| February 2025 | ₹46.71 Cr |
+| March 2025 | ₹47.50 Cr |
+| April 2025 | ₹48.29 Cr |
+| May 2025 | ₹49.08 Cr |
+| June 2025 | ₹49.87 Cr |
+
+**Key Finding:** Revenue will continue its upward trend through H1 2025 if current growth patterns hold useful for inventory planning and budget allocation.
+
 ## Power BI Dashboard
 
 ### Executive Summary
