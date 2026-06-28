@@ -21,7 +21,7 @@ Python · PostgreSQL · SQL · LangChain · Groq LLM · Power BI · Streamlit ·
 
 ## ML Models
 
-### Churn Prediction — Random Forest Classifier
+### Churn Prediction - Random Forest Classifier
 
 I built this model to identify customers who haven't ordered in the last 180 days and are at risk of leaving permanently.
 
@@ -51,7 +51,7 @@ One thing I ran into during building this, I initially got 100% accuracy which l
 
 ---
 
-### Revenue Forecasting — Linear Regression
+### Revenue Forecasting - Linear Regression
 
 I used 48 months of historical revenue data (Jan 2021 - Dec 2024) to forecast the next 6 months.
 
@@ -84,15 +84,13 @@ I used 48 months of historical revenue data (Jan 2021 - Dec 2024) to forecast th
 ![ML Insights](https://github.com/Madhumitha-Y-16/AI-revenue-intelligence-system/blob/main/screenshots/ml%20insights.png?raw=true)
 
 
-## AI Revenue Assistant — Streamlit App
+## AI Revenue Assistant - Streamlit App
 
 Non-technical stakeholders can open this app in a browser and ask questions like "Which region has the lowest sales?" or "Who is the top sales rep?" and get a plain English answer backed by real SQL queries running on the database.
 
-![Question 1](https://github.com/Madhumitha-Y-16/AI-revenue-intelligence-system/blob/main/screenshots/question%201.png?raw=true)
+<img width="1829" height="796" alt="Screenshot (271)" src="https://github.com/user-attachments/assets/e95ee5ef-bb8a-40a3-b4d2-5ddd38547589" />
 
-![Question 2](https://github.com/Madhumitha-Y-16/AI-revenue-intelligence-system/blob/main/screenshots/question%202.png?raw=true)
-
-![Question 3](https://github.com/Madhumitha-Y-16/AI-revenue-intelligence-system/blob/main/screenshots/question%203.png?raw=true)
+<img width="1813" height="834" alt="Screenshot (272)" src="https://github.com/user-attachments/assets/fb0f3314-33f8-4acb-9986-ae8eaf374215" />
 
 ## Key Business Findings
 
